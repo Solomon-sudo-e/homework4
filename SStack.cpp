@@ -66,6 +66,18 @@ bool SStack::isEmpty() {
     return (Head==nullptr);
 }
 
+int SStack::size() {
+    int count;
+    StackNode *Temp = Head;
+    while(Temp != nullptr) {
+        count++;
+        Temp = Temp->Next;
+    }
+    return count;
+}
+
+
+
 void SStack::Print()
 {
     cout << "stack: ";
@@ -82,46 +94,69 @@ StackNode * SStack::getHead() {
     return Head;
 }
 
-bool SStack::check_brackets(StackNode *node, int bracket_type, bool checking_closed) {
-    char brackets[4] = {'>',']','}','/'};
-    char closed_brackets[3] = {'<', '[', '{'};
-    bool checked = false;
-
-    if(node == nullptr && checking_closed) return false;
-    if(node == nullptr && !checking_closed) return true;
-
-    if(!checking_closed) {
-        for(int i = 0; i<3; i++) {
-            if(node->Character == brackets[i]) {
-                checked = true;
-                std::cout << node->Character << " Open bracket" << endl;
-                return check_brackets(node->Next, i, true);
-            }
-        }
-        if(!checked) {
-            std::cout << "unchecked";
-
-            return check_brackets(node->Next, 3, false);
-        }
-    } else if (checking_closed) {
-        if(node->Character == closed_brackets[bracket_type]) {
-            std::cout << node->Character << " Closed bracket";
-            return true;
-        }
-        for(int i = 0; i<3; i++) {
-            if(node->Character == brackets[i]) {
-                return check_brackets(node->Next, i, false);
-            } else if (node->Character == closed_brackets[i] && (i != bracket_type)) {
-                return false;
-            }
-        }
-        return check_brackets(node->Next, bracket_type, true);
-
-    }
-    /*
-     * Check brackets, if opening bracket move to next node and check
-     * for closing bracket. If new opening bracket recursively call to check for true first.
-     * To check for true it should look to close the bracket with a matching bracket before
-     * seeing a different closing bracket.
-     */
+//Local function used in check_brackets
+bool isMatchingPair(char open, char close) {
+    return (open == '(' && close == ')') ||
+           (open == '[' && close == ']') ||
+           (open == '{' && close == '}') ||
+           (open == '<' && close == '>');
 }
+
+bool SStack::check_brackets(StackNode *node) {
+    char brackets[4] = {'>',']','}', ')'};
+    char closed_brackets[4] = {'<', '[', '{', '('};
+    char open[size()];
+    char close[size()];
+    char limbo[size()];
+    int posClose = 0;
+    int posLimbo = 0;
+    int posOpen = 0;
+    int count = 0;
+
+    //Filling opening, and closing brackets. I do this by iterating through open brackets filling the open in a limbo
+    // checking most recent closed to most recent open and removing from limbo and adding to open array to be
+    // compared later down the line.
+    while(node != nullptr) {
+        for(int i = 0; i<4; i++) {
+            //Checking that character is open and putting in limbo.
+            if(node->Character == brackets[i]) {
+                limbo[posLimbo] = brackets[i];
+                posLimbo++;
+            }
+            //Checking if closed bracket and inserting into closed array.
+            if(node->Character == closed_brackets[i]) {
+                close[posClose] = closed_brackets[i];
+                posClose++;
+
+                //Matching the opening and closing brackets to find matches and inserting opening match to open array.
+                if(isMatchingPair(close[count], limbo[posLimbo-1])) {
+                    open[posOpen] = limbo[posLimbo-1];
+                    posLimbo--;
+                    posOpen++;
+                    count++;
+                }
+            }
+        }
+        node = node->Next;
+    }
+
+    //Setting size equal to posClose so I can iterate and still keep track of posClose for checking balance at end.
+    int size = posClose;
+    //Iterating through and comparing each set of brackets, making sure they are matching pairs.
+    for(int i = 0; i < size; i++) {
+        //calling local function matching pair, if false immediately return false and stop matching.
+        if(isMatchingPair(close[i], open[i])) {
+            posClose--;
+        } else {
+            return false;
+        }
+    }
+
+    //Check to make sure all brackets have been checked.
+    if(posClose == 0) {
+        return true;
+    } else {
+        return false;
+    }
+}
+

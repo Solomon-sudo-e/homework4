@@ -36,7 +36,7 @@ public:
     int size();
     void Print();
     StackNode * getHead();
-    bool check_brackets(StackNode *node, int bracket_type, bool checking_closed);
+    bool check_brackets(StackNode *node);
 
 private:
     StackNode *Head;
