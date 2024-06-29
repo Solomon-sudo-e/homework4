@@ -10,20 +10,6 @@
 
 using namespace std;
 class SQueue {
-    /*
-     * constructor
-• copy constructor
-• destructor
-• insert (enqueue) (add an element)
-• remove (dequeue) (remove an element)
-• front (return the first element without removing it)
-• isFull
-• isEmpty
-• size
-• print
-
-     */
-
 public:
     SQueue();
     SQueue(const SQueue &queue);

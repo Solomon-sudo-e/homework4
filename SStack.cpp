@@ -113,10 +113,11 @@ bool SStack::check_brackets(StackNode *node) {
     int posOpen = 0;
     int count = 0;
 
+    StackNode *Temp = node;
     //Filling opening, and closing brackets. I do this by iterating through open brackets filling the open in a limbo
     // checking most recent closed to most recent open and removing from limbo and adding to open array to be
     // compared later down the line.
-    while(node != nullptr) {
+    while(Temp != nullptr) {
         for(int i = 0; i<4; i++) {
             //Checking that character is open and putting in limbo.
             if(node->Character == brackets[i]) {
@@ -137,7 +138,7 @@ bool SStack::check_brackets(StackNode *node) {
                 }
             }
         }
-        node = node->Next;
+        Temp = Temp->Next;
     }
 
     //Setting size equal to posClose so I can iterate and still keep track of posClose for checking balance at end.
@@ -158,5 +159,6 @@ bool SStack::check_brackets(StackNode *node) {
     } else {
         return false;
     }
+
 }
 

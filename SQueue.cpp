@@ -5,6 +5,7 @@
 #include <iostream>
 #include "SQueue.h"
 using namespace std;
+
 SQueue::SQueue ()
 {
     for(int index=0; index<MAX_SIZE; index++)
@@ -23,7 +24,13 @@ SQueue::SQueue (const SQueue & queue)
 
 SQueue::~SQueue()
 {
-    // Empty
+   count = 0;
+   end = -1;
+   front = 0;
+   char deleted[MAX_SIZE];
+   for(int i = 0; i<MAX_SIZE; i++) {
+       data[i] = deleted[i];
+   }
 }
 
 void SQueue::Insert(const char character)
@@ -47,10 +54,8 @@ void SQueue::Remove(char &character) {
 
     // Remove front value from queue
     character = data[front];
-//    cout << "Removing element: " << character << " from front: " << front << endl;
     front = (front + 1) % MAX_SIZE;
     count--;
-//    cout << "New front: " << front << ", count: " << count << endl;
 }
 
 int SQueue::getCount()
@@ -99,11 +104,11 @@ void SQueue::tagger() {
             break;
         }
         if(getFront() != 'a' && getFront() != 'b' && getFront() != 'c') {
-            cout << "This is a invalid string try again!" << endl;
+            cout << "This is an invalid string, try again!" << endl;
+            break;
         }
 
         if(getFront() == 'a') {
-            character = 'a';
             Remove(character);
             Remove(character);
             Insert('b');
@@ -111,16 +116,14 @@ void SQueue::tagger() {
             Insert('c');
             Print();
         }
-        if(getFront() == 'b') {
-            character = 'b';
+        else if(getFront() == 'b') {
             Remove(character);
             Remove(character);
             Insert('a');
             Insert('#');
             Print();
         }
-        if(getFront() == 'c') {
-            character = 'c';
+        else if(getFront() == 'c') {
             Remove(character);
             Remove(character);
             Insert('a');
@@ -129,6 +132,10 @@ void SQueue::tagger() {
             Print();
         }
     }
-
+    cout << "Stopping tagging system!" << endl;
+    if(getFront() == '#') {
+        cout << "'#' was found!";
+    } else if(count <= 1)
+        cout << "The size was less than 2 and can no longer be checked!" << endl;
 }
 

@@ -2,31 +2,41 @@
 #include "SStack.h"
 #include "SQueue.h"
 
+SStack initialize_stack() {
+    SStack s;
+    return s;
+}
+
+SQueue initialize_Queue() {
+    SQueue q;
+    return q;
+}
+
 int go_again() {
     int option;
     cout << "Do you want to go again?" << endl << "1) Yes     2) No" << endl;
     cin >> option;
-    while((option != 1) && (option != 2)) {
-        if(option == 1) {
-            return 1;
-        } else if(option == 2) {
-            return 2;
-        } else {
-            cout << "You did not select a valid option, try again!" << endl;
-        }
+
+    if(option == 1) {
+        return 1;
+    } else if(option == 2) {
+        return 2;
+    } else {
+        cout << "You did not select a valid option, try again!" << endl;
+        go_again();
     }
 }
 
 void menu() {
-    int option;
-    string new_string;
-    SStack stack;
-    SQueue q;
     bool continueMenu = true; // Flag to control the loop
 
     cout << "Welcome to the brack'n'tag menu!" << endl;
 
     while (continueMenu) {
+        SStack s;
+        SQueue q;
+        int option;
+        string new_string;
         cout << "You have two options:" << endl
              << "1) Check your brackets for balance." << endl
              << "2) Check your tagging on a menu. The rules are: a-->bcc, b-->a#, c-->aaa, until it reaches a '#'!" << endl;
@@ -40,9 +50,9 @@ void menu() {
                 cin >> new_string;
 
                 for (char i : new_string)
-                    stack.Push(i);
+                    s.Push(i);
 
-                if (stack.check_brackets(stack.getHead())) {
+                if (s.check_brackets(s.getHead())) {
                     cout << "Your string is balanced!" << endl;
                 } else {
                     cout << "Your string is unfortunately not balanced." << endl;
@@ -66,18 +76,13 @@ void menu() {
                 continue; // Skip go_again prompt
         }
 
-        cout << "Do you want to go again?" << endl;
-        cout << "1) Yes     2) No" << endl;
+        int goAgainOption = go_again();
 
-        int goAgainOption;
-        cin >> goAgainOption;
-
-        if (goAgainOption != 1) {
+        if (goAgainOption == 2) {
             continueMenu = false; // Exit loop
+            cout << "Exiting the menu. Goodbye!" << endl;
         }
     }
-
-    cout << "Exiting the menu. Goodbye!" << endl;
 }
 
 using namespace std;
